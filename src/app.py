@@ -1,3 +1,16 @@
+from fastapi import Request
+from fastapi import status
+from fastapi.responses import JSONResponse
+@app.delete("/activities/{activity_name}/unregister")
+def unregister_participant(activity_name: str, email: str):
+    """Remove a participant from an activity"""
+    if activity_name not in activities:
+        return JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content={"detail": "Activity not found"})
+    activity = activities[activity_name]
+    if email not in activity["participants"]:
+        return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content={"detail": "Participant not found in this activity"})
+    activity["participants"].remove(email)
+    return {"message": f"Removed {email} from {activity_name}"}
 """
 High School Management System API
 
